@@ -15,8 +15,14 @@ import (
 	"path/filepath"
 )
 
-var logger = log.NewStd(false)
+var logger log.Logger
 var k8sclient *kubernetes.Clientset
+
+func init() {
+	logger = log.NewStd(false)
+	k8sclient = getK8sClient()
+	tittle()
+}
 
 type NsData struct {
 	Namespace  string   `json:"namespace"`
@@ -171,9 +177,6 @@ func middleware(handler http.Handler) http.Handler {
 }
 
 func main() {
-
-	tittle()
-	k8sclient = getK8sClient()
 
 	r := mux.NewRouter()
 	r.Use(middleware)
